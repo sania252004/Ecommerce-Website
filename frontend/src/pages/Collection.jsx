@@ -11,9 +11,9 @@ const Collection = () => {
   const { collection } = useParams();
   const [searchParams] = useSearchParams();
   const dispatch = useDispatch();
-  
+
   const { products, loading, error } = useSelector((state) => state.products);
-  
+
   const sidebarRef = useRef(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -22,20 +22,19 @@ const Collection = () => {
     const queryParams = Object.fromEntries([...searchParams]);
 
     // 2. Build the final fetch object
-    const fetchParams = { 
+    const fetchParams = {
       ...queryParams,
       // Ensure the 'sort' key from URL is explicitly mapped to 'sortBy'
-      sortBy: searchParams.get("sort") || "" 
+      sortBy: searchParams.get("sort") || "",
     };
 
-    // 3. Handle 'all' collection logic 
+    // 3. Handle 'all' collection logic
     if (collection && collection !== "all") {
       fetchParams.collection = collection;
     }
 
     // 4. Dispatch the API call
     dispatch(fetchProductsByFilters(fetchParams));
-    
   }, [dispatch, collection, searchParams]); // Triggers on every URL change
 
   const toggleSidebar = () => setIsSidebarOpen((prev) => !prev);
@@ -80,13 +79,13 @@ const Collection = () => {
           {/* Ensure SortOptions is correctly updating searchParams */}
           <SortOptions />
         </div>
-        
+
         {/* Added a key based on product length/sort to ensure fresh render */}
-        <ProductGrid 
-          key={`${searchParams.get("sort")}-${products.length}`}
-          products={products} 
-          loading={loading} 
-          error={error} 
+        <ProductGrid
+          key={`${searchParams.get("sort")}-${Array.isArray(products) ? products.length : 0}`}
+          products={Array.isArray(products) ? products : []}
+          loading={loading}
+          error={error}
         />
       </div>
     </div>
