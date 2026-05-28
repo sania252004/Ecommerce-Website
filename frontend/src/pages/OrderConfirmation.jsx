@@ -1,4 +1,4 @@
-import { CheckCircle } from "lucide-react";
+﻿import { CheckCircle } from "lucide-react";
 import { useSelector } from "react-redux";
 
 const steps = ["Order Placed", "Processing", "Shipped", "Out for Delivery", "Delivered"];

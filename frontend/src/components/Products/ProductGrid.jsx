@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+﻿import { Link } from "react-router-dom";
 
 // Map product categories/names to relevant Unsplash images
 const getFallbackImage = (product) => {
