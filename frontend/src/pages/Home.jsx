@@ -29,9 +29,26 @@ const Home = () => {
         const response = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/api/products/best-seller`,
         );
-        setBestSellerProduct(response.data);
+        
+        console.log("Best Seller Raw Response:", response.data);
+
+        // Defensive Extract: Check if the response contains the direct product or a nested object property
+        if (response.data && response.data._id) {
+          // Direct product object received
+          setBestSellerProduct(response.data);
+        } else if (response.data && response.data.product) {
+          // Wrapped inside a 'product' object key
+          setBestSellerProduct(response.data.product);
+        } else if (response.data && Array.isArray(response.data) && response.data.length > 0) {
+          // If the endpoint accidentally returns an array instead of a single object, grab the first one
+          setBestSellerProduct(response.data[0]);
+        } else {
+          console.error("Unexpected best-seller format:", response.data);
+          setBestSellerProduct(null);
+        }
       } catch (error) {
         console.error("Best Seller Fetch Error:", error);
+        setBestSellerProduct(null);
       } finally {
         setBestSellerLoading(false); // ✅ Stop loading regardless of result
       }
@@ -55,7 +72,7 @@ const Home = () => {
           <p className="text-center text-gray-400">
             Loading Best Seller Product...
           </p>
-        ) : bestSellerProduct ? (
+        ) : bestSellerProduct && bestSellerProduct._id ? (
           <Productdetails productId={bestSellerProduct._id} />
         ) : (
           <p className="text-center text-gray-400">No best seller found.</p> // ✅ Clear fallback

@@ -58,13 +58,13 @@ const ProductGrid = ({ products, loading, error }) => {
     return <p className="text-center text-red-500">Error: {error}</p>;
   }
 
-  if (!products || products.length === 0) {
-    return <p className="text-center text-gray-400 py-10">No products found.</p>;
-  }
+  if (!Array.isArray(products) || products.length === 0) {
+  return <p className="text-center text-gray-400 py-10">No products found.</p>;
+}
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-      {products.map((product) => {
+      {(Array.isArray(products) ? products : []).map((product) => {
         const imageUrl = product.images?.[0]?.url || getFallbackImage(product);
 
         return (
